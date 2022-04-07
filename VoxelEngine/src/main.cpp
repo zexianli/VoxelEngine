@@ -1,7 +1,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "../shader.h"
+#include "core/shader.h"
 
 int main() {
 	std::cout << "Hello, World!" << std::endl;
