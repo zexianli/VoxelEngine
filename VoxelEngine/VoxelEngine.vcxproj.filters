@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\shaders">
+      <UniqueIdentifier>{900ffd5c-5367-43f1-bb4d-c6678b066b9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -21,13 +24,21 @@
     <ClCompile Include="src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\vertex\vertex_core.glsl">
-      <Filter>Resource Files</Filter>
+    <ClInclude Include="shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\shaders\vertex\vertex_core.glsl">
+      <Filter>Source Files\shaders</Filter>
     </None>
-    <None Include="assets\fragment\fragment_core.glsl">
-      <Filter>Resource Files</Filter>
+    <None Include="src\shaders\fragment\fragment_core.glsl">
+      <Filter>Source Files\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>
