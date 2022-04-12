@@ -16,6 +16,9 @@
     <Filter Include="Source Files\shaders">
       <UniqueIdentifier>{900ffd5c-5367-43f1-bb4d-c6678b066b9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\texture">
+      <UniqueIdentifier>{c8c0922b-cdde-4e26-b4ea-f9739d917400}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -29,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="src\core\imageLoader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture\textureAtlas.cpp">
+      <Filter>Source Files\texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +51,9 @@
     </ClInclude>
     <ClInclude Include="src\core\stb_image.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texture\textureAtlas.h">
+      <Filter>Source Files\texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
