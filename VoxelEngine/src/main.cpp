@@ -276,14 +276,27 @@ int main() {
 		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// Draw many cubes
+		//for (size_t i = 0; i < 10; i++) {
+		//	glm::mat4 modelMatrix = glm::mat4(1.0f);
+		//	modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
+		//	float angle = 20.0f * (i + 1);
+		//	modelMatrix = glm::rotate(modelMatrix, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		//	// Pass in the cube to draw
+		//	myShader.setMat4("model", modelMatrix);
+		//	glDrawArrays(GL_TRIANGLES, 0, 36);
+		//}
+
 		for (size_t i = 0; i < 10; i++) {
-			glm::mat4 modelMatrix = glm::mat4(1.0f);
-			modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
-			float angle = 20.0f * (i + 1);
-			modelMatrix = glm::rotate(modelMatrix, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			// Pass in the cube to draw
-			myShader.setMat4("model", modelMatrix);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			for (size_t j = 0; j < 10; j++) {
+				for (size_t k = 0; k < 2; k++) {
+					glm::mat4 modelMatrix = glm::mat4(1.0f);
+					modelMatrix = glm::translate(modelMatrix, glm::vec3(static_cast<float>(i), static_cast<float>(k), static_cast<float>(j)));
+					modelMatrix = glm::rotate(modelMatrix, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+					// Pass in the cube to draw
+					myShader.setMat4("model", modelMatrix);
+					glDrawArrays(GL_TRIANGLES, 0, 36);
+				}
+			}
 		}
 
 
