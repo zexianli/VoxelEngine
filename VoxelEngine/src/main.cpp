@@ -7,9 +7,26 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
-}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
+// Timing
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+// Vectors for camera
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+// Camera free look
+bool firstFocus = true;
+float yaw = -90.0f;
+float pitch = 0.0f;
+float lastX = 1080.0f / 2;
+float lastY = 720.0f / 2;
+
 
 int main() {
 	std::cout << "Hello, World!" << std::endl;
@@ -42,14 +59,20 @@ int main() {
 
 	// Make the window's context current
 	glfwMakeContextCurrent(window);
+	// Resize viewport if window size changes
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	// Tell OpenGL to capture mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	// Call everytime the mouse moves
+	glfwSetCursorPosCallback(window, mouse_callback);
+
+
 
 	// Initialize Glad
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize Glad \n";
 		return -1;
 	}
-
-	glViewport(0, 0, winWidth, winHeight);
 
 	// Create my shader object
 	Shader myShader("src/shaders/vertex/vertex_core.glsl", "src/shaders/fragment/fragment_core.glsl");
@@ -199,25 +222,28 @@ int main() {
 	// Draw in wireframe mode
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	myShader.useShader();
-	glUniform1i(glGetUniformLocation(myShader.ID, "texture1"), 0);
+	myShader.setInt("texture1", 0);
 	myShader.setInt("texture2", 1);
 
 	// Enable depth testing. Z/Depth buffer is created by glfw
 	glEnable(GL_DEPTH_TEST);
 
+	const float cameraSpeed = 0.05f;
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window)) {
+		// Render logic
+		float currentFrame = static_cast<float>(glfwGetTime());
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		processInput(window);
 
 		// Render here
-		// glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
 		// Clear depth buffer otherwise it will have old depth information
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Resize viewport if window size changes
-		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-		// Bind texture
+		// Bind texture to texture units
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
 		glActiveTexture(GL_TEXTURE1);
@@ -226,9 +252,12 @@ int main() {
 		// ---------
 		// Going 3D
 		// ---------
-		// View matrix to move the objects into -Z space
-		glm::mat4 viewMatrix = glm::mat4(1.0f);
-		viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.0f, -3.0f));
+		glm::mat4 viewMatrix;
+		viewMatrix = glm::lookAt(
+			cameraPos,
+			cameraPos + cameraFront,
+			cameraUp
+		);
 
 		// Projection matrix to add perspective
 		// Also needs to take care of aspect ration,
@@ -236,13 +265,10 @@ int main() {
 		glm::mat4 projectionMatrix;
 		int newWidth, newHeight;
 		glfwGetFramebufferSize(window, &newWidth, &newHeight);
-		projectionMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(newWidth) / static_cast<float>(newHeight), 0.1f, 100.0f);
+		projectionMatrix = glm::perspective(glm::radians(47.0f), static_cast<float>(newWidth) / static_cast<float>(newHeight), 0.1f, 100.0f);
 
-		int viewLoc = glGetUniformLocation(myShader.ID, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-
-		int projectionLoc = glGetUniformLocation(myShader.ID, "projection");
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		myShader.setMat4("view", viewMatrix);
+		myShader.setMat4("projection", projectionMatrix);
 
 		// Bind the VAO before draw
 		glBindVertexArray(VAO);
@@ -270,4 +296,56 @@ int main() {
 
 	glfwTerminate();
 	return 0;
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+	glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow* window) {
+	float cameraSpeed = static_cast<float>(2.5f * deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+}
+
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
+	float xPos = static_cast<float>(xposIn);
+	float yPos = static_cast<float>(yposIn);
+
+	// Prevent mouse jump when focusing on app the first time
+	if (firstFocus) {
+		lastX = xPos;
+		lastY = yPos;
+		firstFocus = false;
+	}
+
+	float xOffset = xPos - lastX;
+	float yOffset = lastY - yPos; // reversed since y axis starts at bottom
+	lastX = xPos;
+	lastY = yPos;
+
+	float sensitivity = 0.1f;
+	xOffset *= sensitivity;
+	yOffset *= sensitivity;
+
+	yaw += xOffset;
+	pitch += yOffset;
+
+	// Limit y axis camera movement;
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(direction);
 }
