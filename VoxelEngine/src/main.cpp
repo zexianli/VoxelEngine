@@ -67,7 +67,6 @@ int main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 
 
-
 	// Initialize Glad
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize Glad \n";
@@ -77,61 +76,78 @@ int main() {
 	// Create my shader object
 	Shader myShader("src/shaders/vertex/vertex_core.glsl", "src/shaders/fragment/fragment_core.glsl");
 
-	float positions[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	float textureCoords[] = {
+		0.0f, 0.0f,
 
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
+	// The texture image is 256 * 256
+	// Should start at 0, but texture image is janky
+	float positions[] = {
+		// Front
+		-0.5f, -0.5f, -0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
+		0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
+		0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
+		0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 3
+		-0.5f,  0.5f, -0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
+		-0.5f, -0.5f, -0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 5
+
+		// Back
+		-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
+		0.5f, -0.5f,  0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
+		0.5f,  0.5f,  0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
+		0.5f,  0.5f,  0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 3
+		-0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
+		-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 5
+
+		// Left
+		//// Since the side is flipped
+		//-0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
+		//-0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
+		//-0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
+		//-0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
+		//-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
+		//-0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
+
+		// Left
+		-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
+		-0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
+		-0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
+		-0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 3
+		-0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
+		-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 5
+
+		////Right side
+		// 0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
+		// 0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
+		// 0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
+		// 0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
+		// 0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
+		// 0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
+
+		// Right side
+		0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
+		0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
+		0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
+		0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 3
+		0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
+		0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 5
+
+		 // Bottom
+		 -0.5f, -0.5f, -0.5f,  33.0f / 256.0f, 241.0f / 256.0f, // 0
+		  0.5f, -0.5f, -0.5f,  48.0f / 256.0f, 241.0f / 256.0f, // 1
+		  0.5f, -0.5f,  0.5f,  48.0f / 256.0f, 256.0f / 256.0f, // 2
+		  0.5f, -0.5f,  0.5f,  48.0f / 256.0f, 256.0f / 256.0f, // 3
+		 -0.5f, -0.5f,  0.5f,  33.0f / 256.0f, 256.0f / 256.0f, // 4
+		 -0.5f, -0.5f, -0.5f,  33.0f / 256.0f, 241.0f / 256.0f, // 5
+
+		 // Top
+		 -0.5f,  0.5f, -0.5f,  0.0f / 256.0f, 241.0f / 256.0f, // 0
+		  0.5f,  0.5f, -0.5f,  16.0f / 256.0f, 241.0f / 256.0f, // 1
+		  0.5f,  0.5f,  0.5f,  16.0f / 256.0f, 256.0f / 256.0f, // 2
+		  0.5f,  0.5f,  0.5f,  16.0f / 256.0f, 256.0f / 256.0f, // 3
+		 -0.5f,  0.5f,  0.5f,  0.0f / 256.0f, 256.0f / 256.0f, // 4
+		 -0.5f,  0.5f, -0.5f,  0.0f / 256.0f, 241.0f / 256.0f, // 5
 	};
 
 	unsigned int indices[] = {
@@ -174,44 +190,24 @@ int main() {
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// Setting texture filtering mode to mimap on minifying and linear on magnifying
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Setting texture filtering mode to nearest since we are using pixelated style
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	// Load in texture from image
 	stbi_set_flip_vertically_on_load(true);
 	int width, height, colorChannels;
-	unsigned char* data = stbi_load("src/wall.jpg", &width, &height, &colorChannels, 0);
-	// Create texture
-	if (data) {
-		// Generate texture
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else {
-		std::cout << "FAILED TO LOAD TEXTURE 1" << '\n';
-	}
-
-	// -Texture 2
-	unsigned int texture2;
-	glGenTextures(1, &texture2);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// Setting texture filtering mode to mimap on minifying and linear on magnifying
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	data = stbi_load("src/pepeok.png", &width, &height, &colorChannels, 0);
+	unsigned char* data = stbi_load("src/terrain.png", &width, &height, &colorChannels, 0);
 	// Create texture
 	if (data) {
 		// Generate texture
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		std::cout << "Texture width and height: " << width << " " << height << '\n';
 	}
 	else {
-		std::cout << "FAILED TO LOAD TEXTURE 2" << '\n';
+		std::cout << "FAILED TO LOAD TEXTURE 1" << '\n';
 	}
+
 	// Free data from loading image
 	stbi_image_free(data);
 
@@ -223,7 +219,6 @@ int main() {
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	myShader.useShader();
 	myShader.setInt("texture1", 0);
-	myShader.setInt("texture2", 1);
 
 	// Enable depth testing. Z/Depth buffer is created by glfw
 	glEnable(GL_DEPTH_TEST);
@@ -246,8 +241,7 @@ int main() {
 		// Bind texture to texture units
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
+
 
 		// ---------
 		// Going 3D
@@ -288,7 +282,7 @@ int main() {
 
 		for (size_t i = 0; i < 10; i++) {
 			for (size_t j = 0; j < 10; j++) {
-				for (size_t k = 0; k < 2; k++) {
+				for (size_t k = 0; k < 10; k++) {
 					glm::mat4 modelMatrix = glm::mat4(1.0f);
 					modelMatrix = glm::translate(modelMatrix, glm::vec3(static_cast<float>(i), static_cast<float>(k), static_cast<float>(j)));
 					modelMatrix = glm::rotate(modelMatrix, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
