@@ -9,11 +9,16 @@
 #include <glm/gtc/type_ptr.hpp>
 
 class Shader {
-public:
-	// Program ID
+private:
 	unsigned int ID;
 
+public:
+	Shader() = default;
 	Shader(const char* vertexPath, const char* fragmentPath);
+
+	unsigned int getID();
+	void setId(unsigned int newID);
+
 	void useShader();
 	void setBool(const std::string& name, bool value);
 	void setInt(const std::string& name, int value);

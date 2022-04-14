@@ -19,6 +19,15 @@
     <Filter Include="Source Files\texture">
       <UniqueIdentifier>{c8c0922b-cdde-4e26-b4ea-f9739d917400}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\render">
+      <UniqueIdentifier>{c3df11c3-931b-4ba5-9f00-0f12295bd8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\shader">
+      <UniqueIdentifier>{9e708898-9cb2-401a-976a-01de29185006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\block">
+      <UniqueIdentifier>{8dee0d17-cb21-4aa9-9752-9a22da925301}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -27,14 +36,20 @@
     <ClCompile Include="src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\imageLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\texture\textureAtlas.cpp">
       <Filter>Source Files\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\renderer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\shader.cpp">
+      <Filter>Source Files\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\block\block.cpp">
+      <Filter>Source Files\block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,14 +61,23 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\core\shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\texture\textureAtlas.h">
       <Filter>Source Files\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\renderer.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\shader.h">
+      <Filter>Source Files\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\block\block.h">
+      <Filter>Source Files\block</Filter>
+    </ClInclude>
+    <ClInclude Include="src\block\blockID.h">
+      <Filter>Source Files\block</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

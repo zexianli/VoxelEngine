@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\block\block.cpp" />
     <ClCompile Include="src\core\imageLoader.cpp" />
     <ClCompile Include="src\core\shader.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\render\renderer.cpp" />
     <ClCompile Include="src\texture\textureAtlas.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -30,8 +32,11 @@
     <None Include="src\shaders\vertex\vertex_core.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\block\block.h" />
+    <ClInclude Include="src\block\blockID.h" />
     <ClInclude Include="src\core\shader.h" />
     <ClInclude Include="src\core\stb_image.h" />
+    <ClInclude Include="src\render\renderer.h" />
     <ClInclude Include="src\texture\textureAtlas.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

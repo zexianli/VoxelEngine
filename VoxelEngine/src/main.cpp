@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "render/renderer.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -74,7 +75,8 @@ int main() {
 	}
 
 	// Create my shader object
-	Shader myShader("src/shaders/vertex/vertex_core.glsl", "src/shaders/fragment/fragment_core.glsl");
+	/*Shader myShader("src/shaders/vertex/vertex_core.glsl", "src/shaders/fragment/fragment_core.glsl");*/
+	Renderer render;
 
 	float textureCoords[] = {
 		0.0f, 0.0f,
@@ -101,29 +103,12 @@ int main() {
 		-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 5
 
 		// Left
-		//// Since the side is flipped
-		//-0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
-		//-0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
-		//-0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
-		//-0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
-		//-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
-		//-0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
-
-		// Left
 		-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
 		-0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
 		-0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
 		-0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 3
 		-0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
 		-0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 5
-
-		////Right side
-		// 0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
-		// 0.5f,  0.5f, -0.5f,  64.0f / 256.0f, 256.0f / 256.0f, // 2
-		// 0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
-		// 0.5f, -0.5f, -0.5f,  64.0f / 256.0f, 241.0f / 256.0f, // 1
-		// 0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
-		// 0.5f,  0.5f,  0.5f,  49.0f / 256.0f, 256.0f / 256.0f, // 4
 
 		// Right side
 		0.5f, -0.5f,  0.5f,  49.0f / 256.0f, 241.0f / 256.0f, // 0
@@ -217,8 +202,9 @@ int main() {
 
 	// Draw in wireframe mode
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	myShader.useShader();
-	myShader.setInt("texture1", 0);
+
+	render.getShaders().useShader();
+	render.getShaders().setInt("texture1", 0);
 
 	// Enable depth testing. Z/Depth buffer is created by glfw
 	glEnable(GL_DEPTH_TEST);
@@ -261,33 +247,22 @@ int main() {
 		glfwGetFramebufferSize(window, &newWidth, &newHeight);
 		projectionMatrix = glm::perspective(glm::radians(47.0f), static_cast<float>(newWidth) / static_cast<float>(newHeight), 0.1f, 100.0f);
 
-		myShader.setMat4("view", viewMatrix);
-		myShader.setMat4("projection", projectionMatrix);
+		render.getShaders().setMat4("view", viewMatrix);
+		render.getShaders().setMat4("projection", projectionMatrix);
 
 		// Bind the VAO before draw
 		glBindVertexArray(VAO);
 		// Draw using the indices to point back to positions
 		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		// Draw many cubes
-		//for (size_t i = 0; i < 10; i++) {
-		//	glm::mat4 modelMatrix = glm::mat4(1.0f);
-		//	modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
-		//	float angle = 20.0f * (i + 1);
-		//	modelMatrix = glm::rotate(modelMatrix, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		//	// Pass in the cube to draw
-		//	myShader.setMat4("model", modelMatrix);
-		//	glDrawArrays(GL_TRIANGLES, 0, 36);
-		//}
-
-		for (size_t i = 0; i < 10; i++) {
-			for (size_t j = 0; j < 10; j++) {
-				for (size_t k = 0; k < 10; k++) {
+		for (size_t i = 0; i < 16; i++) {
+			for (size_t j = 0; j < 16; j++) {
+				for (size_t k = 0; k < 60; k++) {
 					glm::mat4 modelMatrix = glm::mat4(1.0f);
 					modelMatrix = glm::translate(modelMatrix, glm::vec3(static_cast<float>(i), static_cast<float>(k), static_cast<float>(j)));
 					modelMatrix = glm::rotate(modelMatrix, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 					// Pass in the cube to draw
-					myShader.setMat4("model", modelMatrix);
+					render.getShaders().setMat4("model", modelMatrix);
 					glDrawArrays(GL_TRIANGLES, 0, 36);
 				}
 			}
